@@ -1,7 +1,9 @@
 import os
 
 from flask import Flask
+# from celery import Celery
 
+# celery = Celery(__name__, broker='redis://localhost')
 
 def create_app(test_config=None):
     # create and configure the app
@@ -33,5 +35,11 @@ def create_app(test_config=None):
     from . import blog
     app.register_blueprint(blog.bp)
     app.add_url_rule('/', endpoint='index')
-    
+
+    app.config.update(CELERY_CONFIG={
+    'broker_url': 'redis://127.0.0.1:6379',
+    'result_backend': 'redis://127.0.0.1:6379',
+    })
+    # celery.conf.update(app.config["CELERY_CONFIG"])
+
     return app

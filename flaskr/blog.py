@@ -1,3 +1,4 @@
+from .tasks import add
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
@@ -6,6 +7,7 @@ from flaskr.auth import login_required
 from flaskr.db import get_db
 
 bp = Blueprint('blog', __name__)
+
 
 @bp.route('/')
 def index():
@@ -97,3 +99,9 @@ def delete(id):
     db.execute('DELETE FROM post WHERE id = ?', (id,))
     db.commit()
     return redirect(url_for('blog.index'))
+
+
+@bp.route('/add', methods=('POST', 'GET'))
+def add_view():
+    result = add.delay()
+    return f'<h3>{result}</h3>'
